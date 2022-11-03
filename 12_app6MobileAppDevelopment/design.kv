@@ -1,0 +1,117 @@
+<LoginScreen>:
+    GridLayout:
+        cols: 1 #columns
+        GridLayout:
+            cols: 1
+            padding: 15, 15 # the gridlayout to the outside space, exterminal
+            spacing:20, 20 # interminal thing
+            Label:
+                text:"User Login"
+                font_size:'20sp' #space-independent pixels
+            TextInput:
+                id:username
+                hint_text: "Username"
+            TextInput:
+                id:password
+                password:True #在输入密码的时候，输入的内容会变成***
+                hint_text: "Password"
+            RelativeLayout:
+                Button:
+                    text:"Login"
+                    on_press:root.login(root.ids.username.text, root.ids.password.text)
+                    size_hint: 0.3, 0.5
+                    pos_hint:{'center_x': 0.5, 'center_y': 0.6}
+            Label:
+                id:login_wrong
+                text:"" #在login button 和下面一个gridlayout之间建一个space
+        GridLayout:
+            cols: 2
+            size_hint:0.2, 0.2
+            padding:10, 10
+            spacing:10, 0
+            Button:
+                text:"Forget Password?"
+                background_color:1,1,1,0
+                opacity:1 if self.state == 'normal' else 0.5 #点击的时候透明度减半
+                color: 0.1,0.7,1,1
+            Button:
+                background_color:1,1,1,0
+                opacity:1 if self.state == 'normal' else 0.5 #点击的时候透明度减半
+                color: 0.1,0.7,1,1    
+                text:"Sign Up"
+                on_press: root.sign_up()
+                #点这个button的时候，会call冒号后面的func root
+                #root代表了main.py and design.kv里面的LoginScreen class
+                #即点这个button时触发main.py里面的class LoginScreen里的sign_up function
+
+
+<SignUpScreen>:
+    GridLayout:
+        cols: 1
+        padding:20,20
+        spacing:20,20
+        Label:
+            text:"Sign up for a space journey!"
+        TextInput:
+            id: username
+            hint_text: "Username"
+        TextInput:
+            id: password
+            hint_text:"Password"
+        Button:
+            text: "Submit"
+            on_press:root.add_user(root.ids.username.text, root.ids.password.text)
+        #取上面两个textinput里面的的值，最后要加上text，不然会得到<kivy.uix.textinput.TextInput object at 0x0000024BC40C8190>
+        #点submit这个buton的时候，触发 python里面class SignUpScreen里面的func add_user
+
+<SignUpScreenSuccess>:
+    GridLayout:
+        cols:1
+        padding:30,30
+        spacing:30,30
+        Label:
+            text:"Sign up successful!"
+        Button:
+            text:"Login page"
+            on_press:root.go_to_login()
+
+
+<LoginScreenSuccess>:
+    GridLayout:
+        cols:1
+        padding:30,30
+        spacing:30,30
+        RelativeLayout:
+            ImageButton:
+                on_press: root.log_out()
+                source:'12_app6MobileAppDevelopment\logout_hover.png' if self.hovered else "12_app6MobileAppDevelopment\logout_nothover.png"
+                size_hint:0.35, 0.35
+                pos_hint:{'center_x':0.93, 'center_y':0.8}
+        Label:
+            text: "How do you feel?"
+        TextInput:
+            id:feeling
+            hint_text:"Things to try: happ, sad, unloved..."
+        Button:
+            text: "Enlighten me"
+            on_press:root.get_quote(root.ids.feeling.text)
+        ScrollView: #上下滚动条
+            Label:
+                id:quote
+                text:""
+                text_size:self.width, None
+                #self就是这个label，将这个textsize的大小改成适应label的size？可以根据窗口大小调整内容
+                #将这个textsize的高度设置为None，不想它随着label的变化而变化
+                #我们希望label的高度随着textsize的高度而变化，于是
+                size_hint_y:None
+                height:self.texture_size[1]
+                #texture_size 是一个元组，有两个item，第一个是the width of text，第二个是the height of text
+<RootWidget>:
+    LoginScreen:
+        name: "login_screen"
+    SignUpScreen:
+        name: "sign_up_screen"
+    SignUpScreenSuccess:
+        name:"sign_up_screen_success"
+    LoginScreenSuccess:
+        name:"login_screen_success"
